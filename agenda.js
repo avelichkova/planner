@@ -32,7 +32,7 @@ agendaRouter.post('/add', (req, res) => {
     const event = req.body.event;
     const type = req.body.type;
 
-    const newEvent = {time: time, eventContent: event, type: type, index: data.length};
+    const newEvent = {time: time, eventContent: event, type: type, index: data.length, isChecked: false};
     data.push(newEvent);
 
     res.redirect('/agenda');
@@ -82,4 +82,4 @@ function saveAgenda() {
 }
 
 module.exports = agendaRouter;
-// module.exports = { getAgenda }
+//module.exports = { data };

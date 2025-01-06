@@ -2,7 +2,6 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <script src="/event-checkbox-handler.js" async defer></script>
     </head>
     <body>
         <%- include('header/header.ejs')%>
@@ -46,6 +45,22 @@
                     console.log('Error while editing event: ' + err);
                 })
             }
+
+            const checkBox = document.getElementById('check0');
+            const text = document.getElementById('text');
+            // const { data } = require("./agenda");
+
+            function checkChanger() {
+                if (checkBox.checked == true){
+                    
+                    console.log("checked");
+                    text.style.display = "block";
+                } else {
+                    console.log("not checked");
+                    text.style.display = "none";
+                }
+            }
+            checkChanger();
         </script>
     </body>
 </html> 
