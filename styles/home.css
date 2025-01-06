@@ -1,0 +1,99 @@
+body {
+    margin: 0;
+    /* display: flex; */
+    /* align-items: center;
+    justify-content: center; */
+    background-color: #f5f3ed;
+}
+
+#calendar {
+    /* float:left; */
+    margin-top: 150px;
+    position: static;
+    width: 700px;
+    /* height: 300px; */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* padding: 4px; */
+}
+
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 15%;
+    background-color: white;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+#days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.day {
+    text-align: center;
+    padding: 5px;
+    color: #595959;
+    font-weight: 500;
+}
+
+#dates {
+    display: grid;
+    
+    grid-template-columns: repeat(7, 1fr);
+    /* text-align: center; */
+    
+}
+
+.inactiveDays {
+    color :#707882;
+}
+
+#monthYear {
+    font-weight: 600;
+}
+
+#currMonthBtn {
+    width: 50px;
+    height: 30px;
+    margin-top: 10px;
+    margin-left: 43%;
+}
+
+#currDay {
+    background-color: #999FA6;
+    /* border-color: red; */
+    border-radius: 10%;
+    /* width: 20px; */
+}
+
+.date {
+    height: 80px;
+    margin: 2px;
+    padding: 5px;
+    background-color: beige;
+    cursor: pointer;
+    /* border-color: #595959; */
+}
+
+.date:hover {
+    background-color: #999FA6;
+}
+
