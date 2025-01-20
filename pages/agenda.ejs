@@ -5,7 +5,7 @@
     </head>
     <body>
         <%- include('header/header.ejs')%>
-        <h2>Today's agenda</h2>
+        <h2> Agenda: </h2>
         <table>
             <thead>
                 <tr>
@@ -15,10 +15,10 @@
                 </tr>
             </thead>
             <tbody>
-                <% data.forEach((event, index) => { %>
+                <% agendaSelectDate.forEach((event, index) => { %>
                     <tr>
                         <td><%-event.time%></td>
-                        <td id="event-content"><%-event.eventContent%></td>
+                        <td id="event-content<%-index%>"><%-event.eventContent%></td>
                         <td><input id="check<%-index%>" type="checkbox" onclick="checkChanger()"></td>
                         <td><button onclick="window.location.href = '/agenda/edit/<%= index + 1 %>' " >Edit</button></td>
                         <td><button onclick="deleteEvent('<%= event %>', '<%= index %>')">Delete</button></td>

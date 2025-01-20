@@ -8,6 +8,26 @@ let currentDate = new Date();
 const currentMonth = currentDate.getMonth();
 const currentYear = currentDate.getFullYear();
 
+let selectedDay = {};
+
+function changeSelectedDate(year, month, day) {
+    const route = `${year}/${month}/${day}`;
+                fetch(route, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type' : 'application-json'
+                    }, 
+                    //body: JSON.stringify({event: event, index: index})
+                }).then(data => {
+                    window.location.replace(`http://localhost:3030/agenda/${year}/${month}/${day}`);
+                })
+                .catch(err => {
+                    console.log('Error while selecting date: ' + err);
+                })
+    // selectedDay = {year : year, month : month, day : day};
+
+}
+
 const updateCal = function() {
     const currYear = currentDate.getFullYear();
     const currMonth = currentDate.getMonth();
@@ -42,8 +62,12 @@ const updateCal = function() {
         } else { 
             daySquare.classList.add('currDays'); 
         }
-        
+
         daySquare.innerText = date.getDate();
+
+        daySquare.addEventListener('click', () => changeSelectedDate(currYear, currMonth + 1, date.getDate()));
+        // daySquare.addEventListener('click', () => console.log(currYear, currMonth, date.getDate()));
+
         datesElement.appendChild(daySquare);
     }
 
