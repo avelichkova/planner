@@ -20,13 +20,13 @@
                         <td><%-event.time%></td>
                         <td id="event-content<%-index%>"><%-event.eventContent%></td>
                         <td><input id="check<%-index%>" type="checkbox" onclick="checkChanger()"></td>
-                        <td><button onclick="window.location.href = '/agenda/edit/<%= index + 1 %>' " >Edit</button></td>
-                        <td><button onclick="deleteEvent('<%= event %>', '<%= index %>')">Delete</button></td>
+                        <td><button onclick="window.location.href = '<%= actionEdit %>/<%= event.index %>' " >Edit</button></td>
+                        <td><button onclick="deleteEvent('<%= event %>', '<%= event.index %>')">Delete</button></td>
                     </tr>
                 <% })%>
             </tbody>
         </table>
-        <button onclick="window.location.href = '/agenda/add'">Add Event</button>
+        <button onclick="window.location.href = '<%= actionAdd %>'">Add Event</button>
         <p id="text" style="display:none">Checkbox is CHECKED!</p>
 
         <script>
