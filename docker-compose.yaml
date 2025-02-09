@@ -1,0 +1,10 @@
+services:
+  server:
+    build: .
+    volumes: 
+      - scratch:/app/scratch
+    ports: 
+      - 80:3030
+
+volumes:
+  scratch:
