@@ -27,7 +27,7 @@ app.get('/home', (req, res) => {
     res.render("index");
     // console.log(selectedDay);
     //console.log(JSON.parse(localStorage.getItem('agenda')));
-})
+}) 
 
 app.get("/agenda", (req, res) => {
     const month = parseInt(req.query.month);
