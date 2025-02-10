@@ -66,9 +66,9 @@ const updateCal = function() {
         daySquare.innerText = date.getDate();
 
         daySquare.addEventListener('click', () => changeSelectedDate(currYear, currMonth + 1, date.getDate()));
-        // daySquare.addEventListener('click', () => console.log(currYear, currMonth, date.getDate()));
 
         datesElement.appendChild(daySquare);
+
     }
 
     for(let i = lastDayIndex; i < 6; i++) {
@@ -83,6 +83,29 @@ const updateCal = function() {
 
     const monthYearString = currentDate.toLocaleString('default', {month: 'long', year : 'numeric'})
     monthYearElement.textContent = monthYearString;
+
+    fetchEvents(currMonth + 1, currYear);
+}
+
+function fetchEvents(month, year) {
+    fetch(`/agenda?month=${month}&year=${year}`)
+        .then(response => response.json())
+        .then(events => {
+            document.querySelectorAll(".date").forEach(cell => {
+                const day = parseInt(cell.textContent);
+                if (!isNaN(day)) {
+                    const checkedEvents = events.filter(e => e.date === day).filter(obj => obj.isChecked === true);
+                    if (checkedEvents) {
+                        checkedEvents.forEach(event => {
+                            const eventEl = document.createElement("div");
+                            eventEl.textContent = event.eventContent;
+                            cell.appendChild(eventEl);
+                        })
+                        
+                    }
+                }
+            });
+        });
 }
 
 prevBtn.addEventListener('click', () => {

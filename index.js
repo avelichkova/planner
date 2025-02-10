@@ -2,10 +2,13 @@ const express = require('express');
 const path = require('path');
 const { LocalStorage } = require('node-localstorage');
 const localStorage = new LocalStorage('./scratch');
+const app = express();
+    
 // const { agendaSelectDate } = require('./static/calendar');
 // const { data } = require('./data')
 
-const app = express();
+//test
+const arr = ["hello", "hi", "how are you"];
 
 app.set("view engine", 'ejs');
 app.set('views', path.join(__dirname, '/pages'));
@@ -25,6 +28,13 @@ app.get('/home', (req, res) => {
     // console.log(selectedDay);
     //console.log(JSON.parse(localStorage.getItem('agenda')));
 })
+
+app.get("/agenda", (req, res) => {
+    const month = parseInt(req.query.month);
+    const year = parseInt(req.query.year);
+    const filteredEvents = JSON.parse(localStorage.getItem('agenda')).filter(e => e.month === month && e.year === year);
+    res.json(filteredEvents);
+});
 
 const agendaRouter = require("./app/agenda");
 app.use("/agenda", agendaRouter);

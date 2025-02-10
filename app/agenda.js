@@ -26,7 +26,7 @@ agendaRouter.get('/:year/:month/:day', (req, res) => {
         return totalMinutesA - totalMinutesB; 
     });
     // console.log(agendaSelectDate);
-    const action = `/agenda/${year}/${month}/${date}/add`;
+    // const action = `/agenda/${year}/${month}/${date}/add`;
     const actionAdd = `/agenda/${year}/${month}/${date}/add`;
     const actionEdit = `/agenda/${year}/${month}/${date}/edit`;
     res.render('agenda', { agendaSelectDate, actionAdd, actionEdit });
@@ -79,9 +79,11 @@ agendaRouter.get('/:year/:month/:day/edit/:id', (req, res) => {
 })
 
 agendaRouter.post('/:year/:month/:day/edit/:id', (req, res) => {
+    // console.log(req.body);
     const time = req.body.time;
     const event = req.body.event;
     const type = req.body.type;
+    const {isChecked} = req.body;
 
     const id = +req.params.id;
 
@@ -91,9 +93,14 @@ agendaRouter.post('/:year/:month/:day/edit/:id', (req, res) => {
 
     const eventToEdit = data.find(e => e.index === id);
 
-    eventToEdit.time = time;
-    eventToEdit.eventContent = event;
-    eventToEdit.type = type;
+    if(time && eventContent && type) {
+        eventToEdit.time = time;
+        eventToEdit.eventContent = event;
+        eventToEdit.type = type;
+    } else {
+        eventToEdit.isChecked = JSON.parse(isChecked);
+    }
+
     saveAgenda();
 
     res.redirect(`/agenda/${year}/${month}/${date}`);
