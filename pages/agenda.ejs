@@ -20,9 +20,9 @@
                         <td><%-event.time%></td>
                         <td id="event-content<%-index%>"><%-event.eventContent%></td>
                         <% if(event.isChecked === true) { %>
-                            <td><input id="check<%-index%>" type="checkbox" onclick="checkChanger('<%= `check${index}`%>', '<%= event.index %>', '<%= event.year %>', '<%= event.month %>', '<%= event.date %>')" checked></td>
+                            <td><input id="check<%-index%>" type="checkbox" onclick="checkChanger(this , '<%= event.index %>', '<%= event.year %>', '<%= event.month %>', '<%= event.date %>')" checked></td>
                         <%} else {%>
-                            <td><input id="check<%-index%>" type="checkbox" onclick="checkChanger('<%= `check${index}`%>', '<%= event.index %>', '<%= event.year %>', '<%= event.month %>', '<%= event.date %>')"></td>
+                            <td><input id="check<%-index%>" type="checkbox" onclick="checkChanger(this, '<%= event.index %>', '<%= event.year %>', '<%= event.month %>', '<%= event.date %>')" onchange="preventCheck(this)"></td>
                         <%}%>
                         <td><button onclick="window.location.href = '<%= actionEdit %>/<%= event.index %>' " >Edit</button></td>
                         <td><button onclick="deleteEvent('<%= event %>', '<%= event.index %>')">Delete</button></td>
@@ -52,19 +52,26 @@
 
             const text = document.getElementById('text');
 
-            function checkChanger(checkID, id, year, month, date) {
-                const checkBox = document.getElementById(checkID);
+            function checkChanger(checkBox, id, year, month, date) {
+                // const checkBox = document.getElementById(checkID);
                 let isChecked;
+                const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                
                 if (checkBox.checked == true){
-                    
-                    console.log("checked");
-                    isChecked = true;
+                    if(checkedCount > 3) {
+                        checkBox.checked = false;
+                        alert('You can only select up to 3 events.');
+                        return;
+                    }
+                        console.log("checked");
+                        isChecked = true;
+
 
                 } else {
                     console.log("not checked");
                     isChecked = false;
                 }
-                console.log(id);
+                // console.log(id);
                 console.log(isChecked);
 
                 fetch(`/agenda/${year}/${month}/${date}/edit/${id}`, {
@@ -77,6 +84,44 @@
                     console.log('Error while editing event: ' + err);
                 })
             }
+
+            function preventCheck(checkBox) {
+                const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                if(checkedCount > 3) {
+                    checkBox.checked = false;
+                    alert('You can only select up to 3 events.');
+                }
+            }
+
+            // function checkMaxChecked() {
+            //     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            //     const maxChecked = 3;
+
+            //     checkboxes.forEach(checkbox => {
+            //         const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            //         console.log(checkedCount);
+            //         if(checkedCount > maxChecked) {
+            //             return false;
+            //         }
+            //     })
+
+            //     return true;
+            // }
+
+            // document.addEventListener("DOMContentLoaded", () => {
+            //     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            //     const maxChecked = 3;
+
+            //     checkboxes.forEach(checkbox => {
+            //         checkbox.addEventListener('change', () => {
+            //             const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            //             if(checkedCount > maxChecked) {
+            //                 this.checked = false;
+            //                 alert('You can only select up to 3 events.');
+            //             }
+            //         })
+            //     })
+            // })
             // checkChanger();
         </script>
     </body>
