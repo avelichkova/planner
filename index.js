@@ -36,8 +36,8 @@ app.get("/agenda", (req, res) => {
     res.json(filteredEvents);
 });
 
-const agendaRouter = require("./app/agenda");
-app.use("/agenda", agendaRouter);
+const scheduleRouter = require("./app/schedule");
+app.use("/schedule", scheduleRouter);
 
 app.listen(3030, () => {
     console.log('Server listening on port 3030');

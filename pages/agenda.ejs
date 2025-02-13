@@ -2,40 +2,113 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <style>
+            /* * { */
+                /* margin: 0;
+                padding: 0; */
+                /* box-sizing: border-box; */
+            /* } */
+            #container {
+                /* display: flex;
+                align-items: center; Align items vertically */
+                display: flex;
+                /* grid-template-columns: 1fr 1fr; /* Two equal columns */
+                /* gap: 20px; Space between divs */ 
+                /* margin-top: 30px; Adjust for nav height */
+                padding: 20px;
+            }
+
+            #agenda {
+                width: 50%;
+                /* background-color: lightblue; */
+                padding: 20px;
+            }
+
+            #todo {
+                width: 50%;
+                /* background-color: lightcoral; */
+                padding: 20px;
+            }
+        </style>
     </head>
     <body>
         <%- include('header/header.ejs')%>
-        <h2> Agenda: </h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Event</th>
-                    <th>Show</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% agendaSelectDate.forEach((event, index) => { %>
-                    <tr>
-                        <td><%-event.time%></td>
-                        <td id="event-content<%-index%>"><%-event.eventContent%></td>
-                        <% if(event.isChecked === true) { %>
-                            <td><input id="check<%-index%>" type="checkbox" onclick="checkChanger(this , '<%= event.index %>', '<%= event.year %>', '<%= event.month %>', '<%= event.date %>')" checked></td>
-                        <%} else {%>
-                            <td><input id="check<%-index%>" type="checkbox" onclick="checkChanger(this, '<%= event.index %>', '<%= event.year %>', '<%= event.month %>', '<%= event.date %>')" onchange="preventCheck(this)"></td>
-                        <%}%>
-                        <td><button onclick="window.location.href = '<%= actionEdit %>/<%= event.index %>' " >Edit</button></td>
-                        <td><button onclick="deleteEvent('<%= event %>', '<%= event.index %>')">Delete</button></td>
-                    </tr>
-                <% })%>
-            </tbody>
-        </table>
-        <button onclick="window.location.href = '<%= actionAdd %>'" id="btn">Add Event</button>
-        <p id="text" style="display:none">Checkbox is CHECKED!</p>
+        <div id="container">
+            <div id="agenda">
+                <h2> Agenda: </h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Event</th>
+                            <th>Show</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% agendaSelectDate.forEach((event, index) => { %>
+                            <tr>
+                                <td><%-event.time%></td>
+                                <td id="event-content<%-index%>"><%-event.eventContent%></td>
+                                <% if(event.isChecked === true) { %>
+                                    <td><input id="checkE<%-index%>" type="checkbox" onclick="checkChanger(this , '<%= event.index %>', '<%= event.year %>', '<%= event.month %>', '<%= event.date %>', 'agenda')" checked></td>
+                                <%} else {%>
+                                    <td><input id="checkE<%-index%>" type="checkbox" onclick="checkChanger(this, '<%= event.index %>', '<%= event.year %>', '<%= event.month %>', '<%= event.date %>', 'agenda')" onchange="preventCheck(this)"></td>
+                                <%}%>
+                                <td><button onclick="window.location.href = '<%= actionEditEvent %>/<%= event.index %>' " >Edit</button></td>
+                                <td><button onclick="deleteEvent('<%= event %>', '<%= event.index %>')">Delete</button></td>
+                            </tr>
+                        <% })%>
+                    </tbody>
+                </table>
+                <button onclick="window.location.href = '<%= actionAddEvent %>'" id="btn">Add Event</button>
+            </div>
+            
+            <div id="todo">
+                <h2> To-do list: </h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Check</th>
+                            <th>Task</th>
+                            <th>Show</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% todoSelectDate.forEach((task, index) => { %>
+                            <tr>
+                                <%let textDecor = false%>
+                                <% if(task.isFinished === true) { %>
+                                    <td><input id="check-task<%-index%>" type="checkbox" onclick="checkTask('<%- index %>', '<%= task.year %>', '<%= task.month %>', '<%= task.date %>', '<%= task.index %>')" checked></td>
+                                    <%textDecor = true%>
+                                <%} else {%>
+                                    <td><input id="check-task<%-index%>" type="checkbox" onclick="checkTask('<%- index %>', '<%= task.year %>', '<%= task.month %>', '<%= task.date %>', '<%= task.index %>')"></td>
+                                    <%textDecor = false%>
+                                <%}%>
+                                <%if(textDecor) {%>
+                                    <td id="task-content<%-index%>"><s><%= task.taskContent %></s></td>
+                                <%} else {%>
+                                    <td id="task-content<%-index%>"><%= task.taskContent %></td>
+                                <%}%>
+                                <% if(task.isChecked === true) { %>
+                                    <td><input id="task<%-index%>" type="checkbox" onclick="checkChanger(this , '<%= task.index %>', '<%= task.year %>', '<%= task.month %>', '<%= task.date %>', 'todo')" checked></td>
+                                <%} else {%>
+                                    <td><input id="task<%-index%>" type="checkbox" onclick="checkChanger(this, '<%= task.index %>', '<%= task.year %>', '<%= task.month %>', '<%= task.date %>', 'todo')" onchange="preventCheck(this)"></td>
+                                <%}%>
+                                <td><button onclick="window.location.href = '<%= actionEditTask %>/<%= task.index %>' ">Edit</button></td>
+                                <td><button onclick="deleteTask('<%= task %>', '<%= task.index %>')">Delete</button></td>
+                            </tr>
+                        <% })%>
+                    </tbody>
+                </table>
+                <button onclick="window.location.href = ' <%= actionAddTask%> '">Add Task</button>
+            </div>
+        </div>
+        
 
         <script>
             function deleteEvent(event, index){
-                const route = '/agenda/delete/' + (Number(index) + 1);
+                const route = '/schedule/agenda/delete/' + (Number(index) + 1);
+                // console.log("delete");
                 fetch(route, {
                     method: 'DELETE',
                     headers: {
@@ -50,9 +123,9 @@
                 })
             }
 
-            const text = document.getElementById('text');
+            // const text = document.getElementById('text');
 
-            function checkChanger(checkBox, id, year, month, date) {
+            function checkChanger(checkBox, id, year, month, date, type) {
                 // const checkBox = document.getElementById(checkID);
                 let isChecked;
                 const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
@@ -74,7 +147,7 @@
                 // console.log(id);
                 console.log(isChecked);
 
-                fetch(`/agenda/${year}/${month}/${date}/edit/${id}`, {
+                fetch(`/schedule/${type}/${year}/${month}/${date}/edit/${id}`, {
                     method: 'POST',
                     headers: {
                     "Content-Type": "application/json"
@@ -91,6 +164,48 @@
                     checkBox.checked = false;
                     alert('You can only select up to 3 events.');
                 }
+            }
+
+            function checkTask(index, year, month, date, id) {
+                const task = document.getElementById(`task-content${index}`);
+                const checkBox = document.getElementById(`check-task${index}`);
+                let isFinished = false;
+
+                if(checkBox.checked === true) {
+                    task.style.textDecoration = "line-through";
+                    isFinished = true;
+                } else {
+                    task.style.textDecoration = "none";
+                    isFinished = false;
+                }
+
+                fetch(`/schedule/todo/${year}/${month}/${date}/edit/${id}`, {
+                    method: 'POST',
+                    headers: {
+                    "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({isFinished: isFinished})
+                }) .catch(err => {
+                    console.log('Error while editing event: ' + err);
+                })
+
+            }
+
+            function deleteTask(task, index){
+                const route = '/schedule/task/delete/' + (Number(index) + 1);
+                console.log("delete");
+                fetch(route, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type' : 'application-json'
+                    }, 
+                    body: JSON.stringify({index: index})
+                }).then(data => {
+                    location.reload();
+                })
+                .catch(err => {
+                    console.log('Error while editing event: ' + err);
+                })
             }
         </script>
     </body>

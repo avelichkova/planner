@@ -19,7 +19,7 @@ function changeSelectedDate(year, month, day) {
                     }, 
                     //body: JSON.stringify({event: event, index: index})
                 }).then(data => {
-                    window.location.replace(`http://localhost:3030/agenda/${year}/${month}/${day}`);
+                    window.location.replace(`http://localhost:3030/schedule/${year}/${month}/${day}`);
                 })
                 .catch(err => {
                     console.log('Error while selecting date: ' + err);

@@ -5,41 +5,67 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Planner</title>
         <link rel="stylesheet" href="/home.css">
+        <style>
+            
+            #container {
+                margin: 0;
+                display: flex;
+                padding: 20px;
+            }
+
+            #calendar {
+                width: 50%;
+                /* background-color: lightblue; */
+                padding: 20px;
+            }
+
+            #todo {
+                width: 50%;
+                /* background-color: lightcoral; */
+                padding: 20px;
+            }
+        </style>
     </head>
     <body>
         <%- include('header/header.ejs')%>
-        <div id="calendar">
-            <div id="header">
-                <button id="leftBtn">
-                <
-                </button>
-                <div id="monthYear">
-
-                </div>
-                <div class="header">
-                    <button id="righttBtn">
-                       >
+        <div id="container">
+            <div id="calendar">
+                <div id="header">
+                    <button id="leftBtn">
+                    <
                     </button>
+                    <div id="monthYear">
+    
+                    </div>
+                    <div class="header">
+                        <button id="righttBtn">
+                           >
+                        </button>
+                    </div>
                 </div>
+                
+                <div id="days">
+                    <div class="day">Mon</div>
+                    <div class="day">Tue</div>
+                    <div class="day">Wed</div>
+                    <div class="day">Th</div>
+                    <div class="day">Fri</div>
+                    <div class="day">Sat</div>
+                    <div class="day">Sun</div>
+                </div>
+                
+                <div id="dates"></div>
+    
+                <div id="currMonth">
+                    <button id="currMonthBtn">Today</button>
+                </div>
+    
             </div>
-            
-            <div id="days">
-                <div class="day">Mon</div>
-                <div class="day">Tue</div>
-                <div class="day">Wed</div>
-                <div class="day">Th</div>
-                <div class="day">Fri</div>
-                <div class="day">Sat</div>
-                <div class="day">Sun</div>
+            <div id="todo">
+                <p>todo..</p>
             </div>
-            
-            <div id="dates"></div>
-
-            <div id="currMonth">
-                <button id="currMonthBtn">Today</button>
-            </div>
-
         </div>
+        
         <script src="/calendar.js"></script>
     </body>
 </html>
