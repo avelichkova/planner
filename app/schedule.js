@@ -9,7 +9,7 @@ const localStorage = new LocalStorage('./scratch');
 // scheduleRouter.use('/agenda', agendaRouter);
 // scheduleRouter.use('/todo', todoRouter);
 
-// const userdata = require('./index')
+const { authenticate, authToken, redirectIfLoggedIn } = require('./auth')
 
 // console.log(userdata);
 
@@ -21,7 +21,7 @@ let currentUser = {};
 let data = getData("schedule");
 // let userData = [];
 
-scheduleRouter.get('/:year/:month/:day', (req, res) => { // +
+scheduleRouter.get('/:year/:month/:day', authenticate, (req, res) => { // +
     const year = (+req.params.year);
     const month = (+req.params.month);
     const date = (+req.params.day);
@@ -52,7 +52,7 @@ scheduleRouter.get('/:year/:month/:day', (req, res) => { // +
 
 //agenda
 
-scheduleRouter.get('/agenda/:year/:month/:day/add', (req, res) => { //+
+scheduleRouter.get('/agenda/:year/:month/:day/add', authenticate, (req, res) => { //+
     const method = 'Add';
 
     const year = (+req.params.year);
@@ -63,7 +63,7 @@ scheduleRouter.get('/agenda/:year/:month/:day/add', (req, res) => { //+
     res.render('upsertAgenda', { action, method });
 })
 
-scheduleRouter.post('/agenda/:year/:month/:day/add', (req, res) => { //+
+scheduleRouter.post('/agenda/:year/:month/:day/add', authenticate, (req, res) => { //+
     const time = req.body.time;
     const event = req.body.event;
     const type = req.body.type;
@@ -88,7 +88,7 @@ scheduleRouter.post('/agenda/:year/:month/:day/add', (req, res) => { //+
 
 })
 
-scheduleRouter.get('/agenda/:year/:month/:day/edit/:id', (req, res) => { //+
+scheduleRouter.get('/agenda/:year/:month/:day/edit/:id', authenticate, (req, res) => { //+
     const event = data.find(d => d.username === currentUser.username).agenda.find(e => e.index === +req.params.id);
 
     const oldTime = event.time;
@@ -105,7 +105,7 @@ scheduleRouter.get('/agenda/:year/:month/:day/edit/:id', (req, res) => { //+
     res.render('upsertAgenda', {action, oldTime, oldEvent, oldType, method})
 })
 
-scheduleRouter.post('/agenda/:year/:month/:day/edit/:id', (req, res) => { //+
+scheduleRouter.post('/agenda/:year/:month/:day/edit/:id', authenticate, (req, res) => { //+
     // console.log(req.body);
     const time = req.body.time;
     const event = req.body.event;
@@ -133,7 +133,7 @@ scheduleRouter.post('/agenda/:year/:month/:day/edit/:id', (req, res) => { //+
     res.redirect(`/schedule/${year}/${month}/${date}`);
 })
 
-scheduleRouter.delete('/agenda/delete/:id', (req, res) => { //+
+scheduleRouter.delete('/agenda/delete/:id', authenticate, (req, res) => { //+
     // console.log("delete in router");
     const eventToDelete = +req.params.id;
     const eventIndex = data.find(d => d.username === currentUser.username).agenda.findIndex(e => e.index === eventToDelete);
@@ -142,7 +142,7 @@ scheduleRouter.delete('/agenda/delete/:id', (req, res) => { //+
     res.status(200).send();
 })
 
-scheduleRouter.get("/agenda", (req, res) => { //+
+scheduleRouter.get("/agenda", authenticate, (req, res) => { //+
     currentUser = getData("current-user");
     console.log(currentUser);
     const userData = data.find(d => d.username === currentUser.username);
@@ -156,7 +156,7 @@ scheduleRouter.get("/agenda", (req, res) => { //+
 
 // todo
 
-scheduleRouter.get('/todo/:year/:month/:date/add', (req, res) => { //+
+scheduleRouter.get('/todo/:year/:month/:date/add', authenticate, (req, res) => { //+
     const method = 'Add';
 
     const year = (+req.params.year);
@@ -168,7 +168,7 @@ scheduleRouter.get('/todo/:year/:month/:date/add', (req, res) => { //+
     res.render('upsertTodo', { action, method });
 })
 
-scheduleRouter.post('/todo/:year/:month/:date/add', (req, res) => { // +
+scheduleRouter.post('/todo/:year/:month/:date/add', authenticate, (req, res) => { // +
     // const time = req.body.time;
     const task = req.body.task;
     // const type = req.body.type;
@@ -190,7 +190,7 @@ scheduleRouter.post('/todo/:year/:month/:date/add', (req, res) => { // +
 
 })
 
-scheduleRouter.get('/todo/:year/:month/:day/edit/:id', (req, res) => { //+
+scheduleRouter.get('/todo/:year/:month/:day/edit/:id', authenticate, (req, res) => { //+
     const task = data.find(d => d.username === currentUser.username).todo.find(e => e.index === +req.params.id);
 
     const oldTask = task.taskContent;
@@ -205,7 +205,7 @@ scheduleRouter.get('/todo/:year/:month/:day/edit/:id', (req, res) => { //+
     res.render('upsertTodo', {action, oldTask, method})
 })
 
-scheduleRouter.post('/todo/:year/:month/:day/edit/:id', (req, res) => { //+
+scheduleRouter.post('/todo/:year/:month/:day/edit/:id', authenticate, (req, res) => { //+
     // console.log(req.body);
     // const time = req.body.time;
     const task = req.body.task;
@@ -235,7 +235,7 @@ scheduleRouter.post('/todo/:year/:month/:day/edit/:id', (req, res) => { //+
     res.redirect(`/schedule/${year}/${month}/${date}`);
 })
 
-scheduleRouter.delete('/task/delete/:id', (req, res) => { // ?
+scheduleRouter.delete('/task/delete/:id', authenticate, (req, res) => { // +
     console.log("delete in router");
     const taskToDelete = req.params.id;
     const taskIndex = data.find(d => d.username === currentUser.username).todo.findIndex(e => e.index === taskToDelete);
@@ -244,7 +244,7 @@ scheduleRouter.delete('/task/delete/:id', (req, res) => { // ?
     res.status(200).send();
 })
 
-scheduleRouter.get('/todo', (req, res) => { // +
+scheduleRouter.get('/todo', authenticate, (req, res) => { // +
     const date = +(req.query.date);
     const month = +(req.query.month);
     const year = +(req.query.year);

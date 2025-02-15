@@ -18,6 +18,8 @@ require('dotenv').config()
 //test
 // const arr = ["hello", "hi", "how are you"];
 
+const { authenticate, authToken, redirectIfLoggedIn } = require('./auth')
+
 const usersData = getData('users');
 const scheduleData = getData('schedule');
 let currentUser = {}
@@ -53,7 +55,7 @@ function getClosestFutureTime(timesArray) {
 eventNamespace.on("connection", (socket) => {
     console.log("connected");
     const today = new Date();
-    console.log("username" + currentUser.username)
+    // console.log("username" + currentUser.username)
     let getInfo = JSON.stringify(getData("schedule").find(d => d.username === currentUser.username));
     // console.log(JSON.parse(jjj).agenda);
     let todaysEvents = JSON.parse(getInfo).agenda.filter(e => e.date === today.getDate());
@@ -76,9 +78,13 @@ eventNamespace.on("connection", (socket) => {
 //     res.render('testLogin', { info });
 // })
 
-app.get('/', (req, res) => {
+app.get('/', redirectIfLoggedIn, (req, res) => {
     res.render('login')
 })
+
+function generateAccessToken(user) {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+}
 
 app.post('/', async (req, res) => {
     const email = req.body.email;
@@ -90,8 +96,8 @@ app.post('/', async (req, res) => {
     try {
         if(await bcrypt.compare(password, user.password)){
             const userToken = { username: user.username }
-            const accessToken = jwt.sign(userToken, process.env.ACCESS_TOKEN_SECRET);
-            // console.log(accessToken);
+            const accessToken = generateAccessToken(userToken)
+            console.log(accessToken);
             res.cookie('accessToken', accessToken, {
                 httpOnly: true
             })
@@ -104,7 +110,7 @@ app.post('/', async (req, res) => {
     }
 })
 
-app.get('/register', (req, res) => {
+app.get('/register', redirectIfLoggedIn, (req, res) => {
     res.render('register')
 })
 
@@ -139,13 +145,9 @@ function getData(dataName) {
      localStorage.setItem(dataName, dataJson);
  }
 
- function authToken(req, res, next) {
-    // console.log(req.cookies);
-    const token = req.cookies['accessToken'];
-    // console.log("Here:" + token);
-    req.decoded = token ? jwt.verify(token, process.env.ACCESS_TOKEN_SECRET) : null
-    next();
-}
+
+
+
 
 // let userdata = [];
 
@@ -167,5 +169,9 @@ server.listen(3030, () => {
     console.log('Server listening on port 3030');
 })
 
-// module.exports = userdata;
+
+
+  module.exports = { authenticate }
+
+
 // module.exports = {getItem: localStorage.getItem, setItem: localStorage.setItem} ;
