@@ -107,7 +107,7 @@
 
         <script>
             function deleteEvent(event, index){
-                const route = '/schedule/agenda/delete/' + (Number(index) + 1);
+                const route = '/schedule/agenda/delete/' + (Number(index)); //
                 // console.log("delete");
                 fetch(route, {
                     method: 'DELETE',
