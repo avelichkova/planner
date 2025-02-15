@@ -88,7 +88,7 @@ const updateCal = function() {
 }
 
 function fetchEvents(month, year) {
-    fetch(`/agenda?month=${month}&year=${year}`)
+    fetch(`/schedule/agenda?month=${month}&year=${year}`)
         .then(response => response.json())
         .then(events => {
             document.querySelectorAll(".date").forEach(cell => {

@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Planner</title>
         <link rel="stylesheet" href="/home.css">
+        <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
         <style>
             
             #container {
@@ -62,10 +63,34 @@
     
             </div>
             <div id="todo">
-                <p>todo..</p>
+                <p id="todo-list">Today's to-do:</p>
+                <p id="next-event"> Next event: </p>
+                    <table>
+                        <tr>
+                            <td id="time"></td>
+                            <td id="content"></td>
+                        </tr>
+                    </table>
             </div>
         </div>
         
         <script src="/calendar.js"></script>
+        <script src="/today-todo.js"></script>
+        <!-- <script src="/next-event.js"></script> -->
+        <script>
+            const socket = io("http://localhost:3030/home");
+            const beforeEvent = document.getElementById("next-event");
+
+            socket.on('next-event', (event) => {
+                console.log("here")
+                console.log(event);
+                // const newDiv = document.createElement("div");
+                const time = document.getElementById("time");
+                time.textContent = event.time;
+                const content = document.getElementById("content");
+                content.textContent = event.eventContent;
+                // newDiv.appe.after(newDiv);
+            })
+        </script>
     </body>
 </html>

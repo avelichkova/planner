@@ -124,6 +124,13 @@ scheduleRouter.delete('/agenda/delete/:id', (req, res) => {
     res.status(200).send();
 })
 
+scheduleRouter.get("/agenda", (req, res) => {
+    const month = parseInt(req.query.month);
+    const year = parseInt(req.query.year);
+    const filteredEvents = dataAgenda.filter(e => e.month === month && e.year === year);
+    res.json(filteredEvents);
+});
+
 // todo
 
 scheduleRouter.get('/todo/:year/:month/:date/add', (req, res) => {
@@ -211,6 +218,14 @@ scheduleRouter.delete('/task/delete/:id', (req, res) => {
     dataTodo.splice(taskToDelete, 1);
     saveData("todo", dataTodo);
     res.status(200).send();
+})
+
+scheduleRouter.get('/todo', (req, res) => {
+    const date = +(req.query.date);
+    const month = +(req.query.month);
+    const year = +(req.query.year);
+    const filteredEvents = dataTodo.filter(e => e.month === month && e.year === year && e.date === date);
+    res.json(filteredEvents);
 })
 
 function getData(dataName) {
