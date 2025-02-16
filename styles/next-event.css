@@ -1,0 +1,18 @@
+#next-event {
+    padding: 20px;
+    border-radius: 8px;
+    border-color: #333;
+    width: 300px;
+    margin-top: 20px;
+}
+
+#time {
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(159, 123, 70);
+}
+
+#content {
+    font-size: 16px;
+    color: #333;
+}

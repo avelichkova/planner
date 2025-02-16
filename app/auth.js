@@ -34,9 +34,7 @@ const authenticate = (req, res, next) => {
 }
 
 function authToken(req, res, next) {
-    // console.log(req.cookies);
     const token = req.cookies['accessToken'];
-    // console.log("Here:" + token);
     if(!token) {
         res.redirect('/');
     }

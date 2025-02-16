@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+        </style>
     </head>
     <body>
         <form action="<%=action%>" method="POST">
-            <!-- <input type="time" name="time" value="<%= locals.oldTime || '' %>"> -->
             <input type="text" name="task" placeholder= "Add todo" value="<%= locals.oldTask || '' %>">
-            <!-- <input type="text" name="type" placeholder= "Add type" value="<%= locals.oldType || '' %>"> -->
             <button><%=method%></button>
         </form>
         

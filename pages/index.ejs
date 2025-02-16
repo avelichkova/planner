@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Planner</title>
         <link rel="stylesheet" href="/home.css">
+        <link rel="stylesheet" href="/next-event.css">
         <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
         <style>
             
@@ -15,14 +16,12 @@
             }
 
             #calendar {
-                width: 50%;
-                /* background-color: lightblue; */
+                width: 70%;
                 padding: 20px;
             }
 
             #todo {
                 width: 50%;
-                /* background-color: lightcoral; */
                 padding: 20px;
             }
         </style>
@@ -64,7 +63,9 @@
             </div>
             <div id="todo">
                 <p id="todo-list">Today's to-do:</p>
-                <p id="next-event"> Next event: </p>
+            </div>
+            <div id="next-event">
+                <p> Next event: </p>
                     <table>
                         <tr>
                             <td id="time"></td>

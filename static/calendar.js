@@ -17,14 +17,12 @@ function changeSelectedDate(year, month, day) {
                     headers: {
                         'Content-Type' : 'application-json'
                     }, 
-                    //body: JSON.stringify({event: event, index: index})
                 }).then(data => {
                     window.location.replace(`http://localhost:3030/schedule/${year}/${month}/${day}`);
                 })
                 .catch(err => {
                     console.log('Error while selecting date: ' + err);
                 })
-    // selectedDay = {year : year, month : month, day : day};
 
 }
 
@@ -88,7 +86,7 @@ const updateCal = function() {
 }
 
 function fetchEvents(month, year) {
-    fetch(`/schedule/agenda?month=${month}&year=${year}`)
+    fetch(`/schedule?month=${month}&year=${year}`)
         .then(response => response.json())
         .then(events => {
             document.querySelectorAll(".date").forEach(cell => {
@@ -98,7 +96,7 @@ function fetchEvents(month, year) {
                     if (checkedEvents) {
                         checkedEvents.forEach(event => {
                             const eventEl = document.createElement("div");
-                            eventEl.textContent = event.eventContent;
+                            eventEl.textContent = event.eventContent || event.taskContent;
                             cell.appendChild(eventEl);
                         })
                         

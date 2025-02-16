@@ -9,9 +9,11 @@ function fetchTasks(date, month, year) {
             console.log(tasks);
             const contentList = document.createElement("ul");
             tasks.forEach(task => {
-                const content = document.createElement("li");
-                content.textContent = task.taskContent;
-                contentList.appendChild(content);
+                if(!task.isFinished) {
+                    const content = document.createElement("li");
+                    content.textContent = task.taskContent;
+                    contentList.appendChild(content);
+                }
             });
 
             beforeList.after(contentList);

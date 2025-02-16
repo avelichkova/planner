@@ -12,12 +12,6 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 require('dotenv').config()
 
-// const { agendaSelectDate } = require('./static/calendar');
-// const { data } = require('./data')
-
-//test
-// const arr = ["hello", "hi", "how are you"];
-
 const { authenticate, authToken, redirectIfLoggedIn } = require('./auth')
 
 const usersData = getData('users');
@@ -37,27 +31,24 @@ const eventNamespace = io.of('/home');
 
 function getClosestFutureTime(timesArray) {
     let today = new Date();
-    const currentMinutes = today.getHours() * 60 + today.getMinutes(); // Convert current time to minutes
+    const currentMinutes = today.getHours() * 60 + today.getMinutes();
 
-    // Convert time strings into minutes for easy comparison
     const futureTimes = timesArray
     .map(obj => {
         const [hour, minute] = obj.time.split(":").map(Number);
         const totalMinutes = hour * 60 + minute;
-        return { ...obj, totalMinutes }; // Keep original object and add totalMinutes for sorting
+        return { ...obj, totalMinutes }; 
     })
-    .filter(obj => obj.totalMinutes >= currentMinutes) // Only keep future times
-    .sort((a, b) => a.totalMinutes - b.totalMinutes); // Sort in ascending order
+    .filter(obj => obj.totalMinutes >= currentMinutes) 
+    .sort((a, b) => a.totalMinutes - b.totalMinutes); 
 
-    return futureTimes.length > 0 ? futureTimes[0] : {eventContent: "No more events for today!"}; // Return the closest future time or null
+    return futureTimes.length > 0 ? futureTimes[0] : {eventContent: "No more events for today!"}; 
 }
 
 eventNamespace.on("connection", (socket) => {
     console.log("connected");
     const today = new Date();
-    // console.log("username" + currentUser.username)
     let getInfo = JSON.stringify(getData("schedule").find(d => d.username === currentUser.username));
-    // console.log(JSON.parse(jjj).agenda);
     let todaysEvents = JSON.parse(getInfo).agenda.filter(e => e.date === today.getDate());
     let nextEvent = getClosestFutureTime(todaysEvents);
     socket.emit('next-event', nextEvent);
@@ -67,32 +58,23 @@ eventNamespace.on("connection", (socket) => {
         nextEvent = getClosestFutureTime(todaysEvents);
         socket.emit('next-event', nextEvent)
     }, 1000);
-    // socket.emit("disconnect")
+    socket.on('disconnect', () => {
+        clearInterval(intervalId);
+        console.log('disconnected');
+    });
 })
-
-// app.get('/protected', authToken, (req, res) => {
-//     // console.log(req.decoded.email);
-//     const user = scheduleData.find(i => i.username == req.decoded.username)
-//     console.log(user);
-//     const info = user.username;
-//     res.render('testLogin', { info });
-// })
 
 app.get('/', redirectIfLoggedIn, (req, res) => {
     res.render('login')
 })
 
-function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
-}
-
 app.post('/', async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-    // console.log(password);
     const user = usersData.find(u => u.email === email);
+
     if(!user) res.send(400).send("No such user")
-    // console.log(user.password)
+
     try {
         if(await bcrypt.compare(password, user.password)){
             const userToken = { username: user.username }
@@ -119,6 +101,11 @@ app.post('/register', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    const existingUser = usersData.find(user => user.email === email || user.username === username);
+    if (existingUser) {
+        return res.status(400).send("User already exists. Please use a different email or username.");
+    }
+
     bcrypt.genSalt()
         .then(salt => bcrypt.hash(password, salt))
         .then(hashedPassword => {
@@ -135,43 +122,37 @@ app.post('/register', (req, res) => {
         })
 })
 
-function getData(dataName) {
-    const data = localStorage.getItem(dataName) || '[]';
-     return JSON.parse(data);
- }
-
- function saveData(dataName, dataArray) {
-     const dataJson = JSON.stringify(dataArray);
-     localStorage.setItem(dataName, dataJson);
- }
-
-
-
-
-
-// let userdata = [];
+app.post('/logout', (req, res) => {
+    res.clearCookie('accessToken'); 
+    currentUser = {};
+    saveData("current-user", currentUser);
+    return res.redirect('/');
+})
 
 app.get('/home', authToken, (req, res) => {
     const user = scheduleData.find(i => i.username == req.decoded.username)
     currentUser = user;
-    // userdata = user;
     saveData("current-user", user);
-    // // console.log(user);
-    // // const info = user.username;
-    // res.render('index', { user });
     res.render("index");
 }) 
 
 const scheduleRouter = require("./schedule");
 app.use("/schedule", scheduleRouter);
 
+function generateAccessToken(user) {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' });
+}
+
+function getData(dataName) {
+    const data = localStorage.getItem(dataName) || '[]';
+    return JSON.parse(data);
+}
+
+function saveData(dataName, dataArray) {
+    const dataJson = JSON.stringify(dataArray);
+    localStorage.setItem(dataName, dataJson);
+}
+
 server.listen(3030, () => {
     console.log('Server listening on port 3030');
 })
-
-
-
-  module.exports = { authenticate }
-
-
-// module.exports = {getItem: localStorage.getItem, setItem: localStorage.setItem} ;
