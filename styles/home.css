@@ -1,17 +1,13 @@
 body {
     margin: 0;
-    /* display: flex; */
-    /* align-items: center;
-    justify-content: center; */
+
     background-color: #f5f3ed;
+    font-family: Arial, sans-serif;
 }
 
 #calendar {
-    /* float:left; */
-    margin-top: 150px;
     position: static;
     width: 700px;
-    /* height: 300px; */
     height: auto;
     display: flex;
     flex-direction: column;
@@ -26,7 +22,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* padding: 4px; */
 }
 
 button {
@@ -56,10 +51,7 @@ button {
 
 #dates {
     display: grid;
-    
     grid-template-columns: repeat(7, 1fr);
-    /* text-align: center; */
-    
 }
 
 .inactiveDays {
@@ -79,9 +71,7 @@ button {
 
 #currDay {
     background-color: #999FA6;
-    /* border-color: red; */
     border-radius: 10%;
-    /* width: 20px; */
 }
 
 .date {
@@ -90,7 +80,6 @@ button {
     padding: 5px;
     background-color: beige;
     cursor: pointer;
-    /* border-color: #595959; */
 }
 
 .date:hover {

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <form action="<%=action%>" method="POST">
+            <input type="text" name="task" placeholder= "Add todo" value="<%= locals.oldTask || '' %>">
+            <button><%=method%></button>
+        </form>
+        
+    </body>
+</html>

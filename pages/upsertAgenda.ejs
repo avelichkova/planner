@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <form action="<%=action%>" method="POST">
+            <input type="time" name="time" value="<%= locals.oldTime || '' %>">
+            <input type="text" name="event" placeholder= "Add event" value="<%= locals.oldEvent || '' %>">
+            <input type="text" name="type" placeholder= "Add type" value="<%= locals.oldType || '' %>">
+            <button><%=method%></button>
+        </form>
+        
+    </body>
+</html>

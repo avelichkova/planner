@@ -1,0 +1,4 @@
+tests/
+scratch/
+node_modules/
+.env
